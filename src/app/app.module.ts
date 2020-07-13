@@ -51,6 +51,8 @@ import { QrScanComponent } from './components/qr-scan/qr-scan.component';
 
 // QR code module
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,8 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     ReactiveFormsModule,
     FormsModule,
     ClipboardModule,
-    ZXingScannerModule
+    ZXingScannerModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     UtilService,
