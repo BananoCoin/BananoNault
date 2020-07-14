@@ -2,16 +2,21 @@ import 'babel-polyfill';
 
 import { app, BrowserWindow, shell, Menu, protocol, webFrame, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import * as log from 'electron-log';
 import * as url from 'url';
 import * as path from 'path';
 import { initialize } from './lib/ledger';
+
 
 app.setAsDefaultProtocolClient('nano'); // Register handler for nano: links
 
 // Initialize Ledger device detection
 initialize();
 
+// electron init
 let mainWindow;
+log.transports.file.level = 'debug';
+autoUpdater.logger = log;
 
 function createWindow () {
   // Create the browser window.
@@ -82,7 +87,7 @@ app.on('activate', function () {
 
 function checkForUpdates() {
   autoUpdater.checkForUpdatesAndNotify()
-    .then(() => {})
+    .then(console.log)
     .catch(console.log);
 }
 
