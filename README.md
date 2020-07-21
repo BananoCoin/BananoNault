@@ -1,10 +1,11 @@
-# Nault
+# (Banano)Nault (working title)
 
-Nault is a community driven fork of the popular Nano wallet [NanoVault](https://github.com/cronoh/nanovault) 💙
+(Banano)Nault is a community driven fork of [BitDesert/Nault](https://github.com/BitDesert/Nault) 💙
 
-It's a fully client-side signing wallet for sending and receiving [Nano](https://github.com/nanocurrency/nano-node/) either directly in your browser at [nault.cc](https://nault.cc) or with the [desktop app](https://github.com/BitDesert/Nault/releases/latest).
+It's a fully client-side signing wallet for sending and receiving [Banano](https://github.com/nanocurrency/nano-node/) either directly in your browser at [nault.cc](https://nault.cc) or with the [desktop app](https://github.com/BitDesert/Nault/releases/latest).
 
 The main difference compared to the original NanoVault is the "server-less" hosting via [vercel](https://nault.vercel.app), seamless integration with any Nano compatible RPC backend/websocket and the aim to be more frequently maintained. Those features together will greatly increase the stability, performance and uptime.
+
 
 ![Nault Screenshot](/.github/nault.png)
 ___
@@ -24,20 +25,20 @@ Nault is available on your desktop (Windows/Mac/Linux) - just head over to the [
 You can also use Nault from any device on the web at [nault.cc](https://nault.cc/)
 
 # Bugs/Feedback
-If you run into any issues, please use the [GitHub Issue Tracker](https://github.com/BitDesert/Nault/issues) or head over to the [TNC Discord Server](http://discord.nanocenter.org/)!  
+If you run into any issues, please use the [GitHub Issue Tracker](https://github.com/BananoCoin/Nault/issues) or head over to the [Banano Discord Server](http://chat.banano.cc/)!  
 We are continually improving and adding new features based on the feedback you provide, so please let your opinions be known!
 
 ___
 
-#### Everything below is only for contributing to the development of Nault
-#### To download Nault as a desktop app go to the [releases section](https://github.com/BitDesert/Nault/releases), or use the web wallet at [nault.cc](https://nault.cc/)
+#### Everything below is only for contributing to the development of (Banano)Nault
+#### To download Nault as a desktop app go to the [releases section](https://github.com/BananoCoin/Nault/releases), or use the web wallet at [nault.banano.cc](https://nault.banano.cc/) (Planned)
 
 ___
 
 # Application Structure
 
-- [Nault](https://github.com/BitDesert/Nault) - The main wallet application (UI + Seed Generation/Block Signing/Etc).
-- Communication with the network is done via Nano RPC and Websocket protocols, private or public on any nano network.
+- [(Banano)Nault](https://github.com/BananoCoin/Nault/) - The main wallet application (UI + Seed Generation/Block Signing/Etc).
+- Communication with the network is done via (ba)Nano RPC and Websocket protocols, private or public on any banano network.
 
 
 # Development Prerequisites
@@ -48,7 +49,7 @@ ___
 # Development Guide
 #### Clone repository and install dependencies
 ```bash
-git clone https://github.com/BitDesert/Nault
+git clone https://github.com/BananoCoin/Nault
 cd Nault
 npm install
 ```
@@ -106,11 +107,11 @@ Build the desktop wallet for Windows+Mac+Linux (May require dependencies for you
 npm run desktop:full
 ```
 
-## Running unit tests
+## Running unit tests (TBD)
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Running end-to-end tests(TBD)
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
@@ -122,4 +123,6 @@ Special thanks to the following!
 - [dcposch/blakejs](https://github.com/dcposch/blakejs) - Blake2b Implementation
 - [dchest/tweetnacl-js](https://github.com/dchest/tweetnacl-js) - Cryptography Implementation
 
-If you have found Nault useful and are feeling generous, you can donate at `nano_3niceeeyiaa86k58zhaeygxfkuzgffjtwju9ep33z9c8qekmr3iuc95jbqc8`
+If you have found Banano(Nault) useful and are feeling generous, you can donate 
+- to the creators of Nault at `nano_3niceeeyiaa86k58zhaeygxfkuzgffjtwju9ep33z9c8qekmr3iuc95jbqc8`
+- to the team who has adapted Nault for banano at `ban_TBD`
