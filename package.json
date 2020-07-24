@@ -21,7 +21,8 @@
     "wallet:dev": "ng serve --open",
     "wallet:dev-ssl": "ng serve --ssl --open",
     "wallet:build": "ng build --prod",
-    "wallet:build-desktop": "ng build --configuration=desktop --base-href ",
+	"wallet:build-map": "ng build --prod --source-map",
+	"wallet:build-desktop": "ng build --configuration=desktop --base-href ",
     "desktop:compile": "cd desktop-app && tsc && cd ..",
     "desktop:build": "npm run wallet:build-desktop && npm run desktop:compile",
     "desktop:build-local": "npm run desktop:build && npm run desktop:local",
@@ -29,7 +30,9 @@
     "desktop:dev-path": "npm run desktop:compile && ./node_modules/.bin/electron desktop-app/dist/desktop-app.js",
     "desktop:local": "electron-builder",
     "desktop:full": "electron-builder -wml --x64",
-    "desktop:publish": "build -wml --x64 -p always"
+    "desktop:publish": "build -wml --x64 -p always",
+    "bundle:report": "source-map-explorer /**/*.js"
+
   },
   "private": true,
   "dependencies": {
