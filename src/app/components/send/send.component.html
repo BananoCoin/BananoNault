@@ -104,7 +104,9 @@
           <span style="display: block; padding-top: 8px;">You are about to send</span>
           <span style="display:block; font-size: 32px;">{{ rawAmount | rai: 'mnano' }}</span>
           <span style="display:block; font-size: 12px;" *ngIf="amountRaw.gt(0)">+{{ amountRaw.toString(10) }} raw</span>
-          <span style="display:block; font-size: 16px; padding-bottom: 5px;" *ngIf="settings.settings.displayCurrency">{{ amountFiat | fiat: settings.settings.displayCurrency }} @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / NANO</span>
+          <span style="display:block; font-size: 16px; padding-bottom: 5px;" *ngIf="settings.settings.displayCurrency">
+            {{ amountFiat | fiat: settings.settings.displayCurrency }} @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }}
+             / NANO</span>
         </div>
         <br>
         <div uk-grid *ngIf="fromAccount && toAccount">
