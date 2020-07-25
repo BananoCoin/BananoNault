@@ -3,37 +3,88 @@
     <h2>Send Nano</h2>
 
     <!-- Send Panel -->
-    <div uk-grid *ngIf="activePanel == 'send'" class="uk-animation-slide-left-small">
+    <div
+      uk-grid
+      *ngIf="activePanel == 'send'"
+      class="uk-animation-slide-left-small"
+    >
       <div class="uk-width-1-1">
-
         <div class="uk-card uk-card-default">
           <div class="uk-card-body">
             <div class="uk-form-horizontal">
-
-
               <div class="uk-margin">
-                <label class="uk-form-label" for="form-horizontal-select">From Account</label>
+                <label class="uk-form-label" for="form-horizontal-select"
+                  >From Account</label
+                >
                 <div class="uk-form-controls">
-                  <select class="uk-select" [(ngModel)]="fromAccountID" (change)="resetRaw()" id="form-horizontal-select">
-                    <option *ngFor="let account of accounts" [value]="account.id">{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id | squeeze }} ({{ account.balance | rai: settings.settings.displayDenomination }})</option>
+                  <select
+                    class="uk-select"
+                    [(ngModel)]="fromAccountID"
+                    (change)="resetRaw()"
+                    id="form-horizontal-select"
+                  >
+                    <option
+                      *ngFor="let account of accounts"
+                      [value]="account.id"
+                      >{{
+                        account.addressBookName
+                          ? account.addressBookName + " - "
+                          : ""
+                      }}
+                      {{ account.id | squeeze }} ({{
+                        account.balance
+                          | rai: settings.settings.displayDenomination
+                      }})</option
+                    >
                   </select>
                 </div>
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="form-horizontal-text2">To Account</label>
+                <label class="uk-form-label" for="form-horizontal-text2"
+                  >To Account</label
+                >
                 <div class="uk-form-controls">
                   <div class="uk-inline uk-width-1-1">
-                    <span class="uk-form-icon uk-form-icon-flip" *ngIf="toAccountStatus === 0" uk-icon="icon: warning"></span>
-                    <span class="uk-form-icon uk-form-icon-flip"*ngIf="toAccountStatus === 2" uk-icon="icon: check"></span>
-                    <input (blur)="validateDestination()" (keyup)="searchAddressBook()" (focus)="searchAddressBook()" [(ngModel)]="toAccountID" [ngClass]="{ 'uk-form-success': toAccountStatus === 2, 'uk-form-danger': toAccountStatus === 0 }" class="uk-input" id="form-horizontal-text2" type="text" placeholder="Account to send to" autocomplete="off">
+                    <span
+                      class="uk-form-icon uk-form-icon-flip"
+                      *ngIf="toAccountStatus === 0"
+                      uk-icon="icon: warning"
+                    ></span>
+                    <span
+                      class="uk-form-icon uk-form-icon-flip"
+                      *ngIf="toAccountStatus === 2"
+                      uk-icon="icon: check"
+                    ></span>
+                    <input
+                      (blur)="validateDestination()"
+                      (keyup)="searchAddressBook()"
+                      (focus)="searchAddressBook()"
+                      [(ngModel)]="toAccountID"
+                      [ngClass]="{
+                        'uk-form-success': toAccountStatus === 2,
+                        'uk-form-danger': toAccountStatus === 0
+                      }"
+                      class="uk-input"
+                      id="form-horizontal-text2"
+                      type="text"
+                      placeholder="Account to send to"
+                      autocomplete="off"
+                    />
 
-                    <div *ngIf="(addressBookResults$ | async).length" [hidden]="!showAddressBook" class="uk-animation-slide-down-small uk-width-1-1 uk-card uk-card-default uk-card-body uk-position-absolute" style="z-index: 15000">
+                    <div
+                      *ngIf="(addressBookResults$ | async).length"
+                      [hidden]="!showAddressBook"
+                      class="uk-animation-slide-down-small uk-width-1-1 uk-card uk-card-default uk-card-body uk-position-absolute"
+                      style="z-index: 15000;"
+                    >
                       <ul class="uk-nav uk-nav-default">
                         <li class="uk-nav-header">Address Book Results</li>
                         <li class="uk-nav-divider"></li>
                         <li *ngFor="let book of addressBookResults$ | async">
-                          <a (click)="selectBookEntry(book.account)">{{ book.name }}</a>
+                          <a (click)="selectBookEntry(book.account)">{{
+                            book.name
+                          }}</a>
                         </li>
                       </ul>
                     </div>
@@ -42,55 +93,126 @@
 
                 <div class="uk-form-controls" *ngIf="addressBookMatch">
                   <div class="uk-inline uk-width-1-1">
-                    <span class="uk-label uk-label-primary">{{ addressBookMatch }}</span>
+                    <span class="uk-label uk-label-primary">{{
+                      addressBookMatch
+                    }}</span>
                   </div>
                 </div>
               </div>
 
               <div uk-grid>
                 <div class="uk-width-1-1">
-                  <label class="uk-form-label" for="form-horizontal-text">Amount</label>
+                  <label class="uk-form-label" for="form-horizontal-text"
+                    >Amount</label
+                  >
                   <div class="uk-form-controls">
                     <div uk-grid>
                       <div class="uk-width-3-5">
                         <div class="uk-inline uk-width-1-1">
-                          <a class="uk-form-icon uk-form-icon-flip" (click)="setMaxAmount()" style="padding-right: 7px;" uk-tooltip title="Set Maximum Amount">Max</a>
-                          <input [(ngModel)]="amount" class="uk-input" id="form-horizontal-text" (keyup)="syncFiatPrice()" (change)="syncFiatPrice()" type="text" placeholder="Amount of {{ selectedAmount.name }} to send">
+                          <a
+                            class="uk-form-icon uk-form-icon-flip"
+                            (click)="setMaxAmount()"
+                            style="padding-right: 7px;"
+                            uk-tooltip
+                            title="Set Maximum Amount"
+                            >Max</a
+                          >
+                          <input
+                            [(ngModel)]="amount"
+                            class="uk-input"
+                            id="form-horizontal-text"
+                            (keyup)="syncFiatPrice()"
+                            (change)="syncFiatPrice()"
+                            type="text"
+                            placeholder="Amount of {{
+                              selectedAmount.name
+                            }} to send"
+                          />
                         </div>
-
                       </div>
                       <div class="uk-width-2-5">
                         <div class="uk-inline uk-width-1-1">
-                          <button class="uk-button uk-button-secondary uk-width-1-1" type="button" style="text-transform: none;">{{ selectedAmount.shortName }}</button>
+                          <button
+                            class="uk-button uk-button-secondary uk-width-1-1"
+                            type="button"
+                            style="text-transform: none;"
+                          >
+                            {{ selectedAmount.shortName }}
+                          </button>
                           <div uk-dropdown>
                             <ul class="uk-nav uk-dropdown-nav">
-                              <li class="uk-active uk-dropdown-spacing" *ngFor="let amount of amounts" (click)="selectedAmount = amount; syncNanoPrice();">{{ amount.name }}</li>
+                              <li
+                                class="uk-active uk-dropdown-spacing"
+                                *ngFor="let amount of amounts"
+                                (click)="
+                                  selectedAmount = amount; syncNanoPrice()
+                                "
+                              >
+                                {{ amount.name }}
+                              </li>
                             </ul>
                           </div>
                         </div>
                       </div>
 
-                      <div *ngIf="amountRaw.gt(0)" class="uk-width-1-1 uk-width-3-5@m uk-text-center uk-text-small uk-text-muted uk-margin-remove">
-                        +{{ amountRaw.toString(10) }} raw &nbsp; <a (click)="resetRaw()">remove</a>
+                      <div
+                        *ngIf="amountRaw.gt(0)"
+                        class="uk-width-1-1 uk-width-3-5@m uk-text-center uk-text-small uk-text-muted uk-margin-remove"
+                      >
+                        +{{ amountRaw.toString(10) }} raw &nbsp;
+                        <a (click)="resetRaw()">remove</a>
                       </div>
 
-                      <div class="uk-width-1-1 uk-width-3-5@s" style="margin-top: 10px;" *ngIf="settings.settings.displayCurrency">
+                      <div
+                        class="uk-width-1-1 uk-width-3-5@s"
+                        style="margin-top: 10px;"
+                        *ngIf="settings.settings.displayCurrency"
+                      >
                         <div class="uk-width-1-1 uk-inline">
-                          <a class="uk-form-icon uk-link-reset uk-link-muted" style="padding-left: 7px;" uk-tooltip title="Last Price: {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / NANO">{{ settings.settings.displayCurrency | currencySymbol }}</a>
-                          <input [(ngModel)]="amountFiat" (keyup)="syncNanoPrice()" (change)="syncNanoPrice()" style="padding-left: 50px; border: 0; border-bottom: 1px solid #e5e5e5;" class="uk-input" id="form-horizontal-text-fiat" type="text" placeholder="Amount of {{ settings.settings.displayCurrency }} to send">
+                          <a
+                            class="uk-form-icon uk-link-reset uk-link-muted"
+                            style="padding-left: 7px;"
+                            uk-tooltip
+                            title="Last Price: {{
+                              price.price.lastPrice
+                                | fiat: settings.settings.displayCurrency
+                            }} / NANO"
+                            >{{
+                              settings.settings.displayCurrency | currencySymbol
+                            }}</a
+                          >
+                          <input
+                            [(ngModel)]="amountFiat"
+                            (keyup)="syncNanoPrice()"
+                            (change)="syncNanoPrice()"
+                            style="
+                              padding-left: 50px;
+                              border: 0;
+                              border-bottom: 1px solid #e5e5e5;
+                            "
+                            class="uk-input"
+                            id="form-horizontal-text-fiat"
+                            type="text"
+                            placeholder="Amount of {{
+                              settings.settings.displayCurrency
+                            }} to send"
+                          />
                         </div>
                       </div>
-
                     </div>
-
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
           <div class="uk-card-footer">
-            <button class="uk-button uk-button-primary uk-width-1-1" type="button" (click)="sendTransaction()">Send Nano</button>
+            <button
+              class="uk-button uk-button-primary uk-width-1-1"
+              type="button"
+              (click)="sendTransaction()"
+            >
+              Send Nano
+            </button>
           </div>
         </div>
       </div>
@@ -98,28 +220,53 @@
     <!-- End Send Panel -->
 
     <!-- Confirmation Panel -->
-    <div uk-grid *ngIf="activePanel == 'confirm'" class="uk-animation-slide-left">
+    <div
+      uk-grid
+      *ngIf="activePanel == 'confirm'"
+      class="uk-animation-slide-left"
+    >
       <div class="uk-width-1-1">
         <div class="uk-card uk-card-default uk-width-1-1 uk-text-center">
-          <span style="display: block; padding-top: 8px;">You are about to send</span>
-          <span style="display:block; font-size: 32px;">{{ rawAmount | rai: 'mnano' }}</span>
-          <span style="display:block; font-size: 12px;" *ngIf="amountRaw.gt(0)">+{{ amountRaw.toString(10) }} raw</span>
-          <span style="display:block; font-size: 16px; padding-bottom: 5px;" *ngIf="settings.settings.displayCurrency">{{ amountFiat | fiat: settings.settings.displayCurrency }} @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / NANO</span>
+          <span style="display: block; padding-top: 8px;"
+            >You are about to send</span
+          >
+          <span style="display: block; font-size: 32px;">{{
+            rawAmount | rai: "mnano"
+          }}</span>
+          <span style="display: block; font-size: 12px;" *ngIf="amountRaw.gt(0)"
+            >+{{ amountRaw.toString(10) }} raw</span
+          >
+          <span
+            style="display: block; font-size: 16px; padding-bottom: 5px;"
+            *ngIf="settings.settings.displayCurrency"
+          >
+            {{ amountFiat | fiat: settings.settings.displayCurrency }} @
+            {{
+              price.price.lastPrice | fiat: settings.settings.displayCurrency
+            }}
+            / BANANO</span
+          >
         </div>
-        <br>
+        <br />
         <div uk-grid *ngIf="fromAccount && toAccount">
           <div class="uk-width-1-2@m">
             <div class="uk-card uk-card-default">
-              <div class="uk-card-header uk-text-left" style="padding: 20px 20px;">
-
+              <div
+                class="uk-card-header uk-text-left"
+                style="padding: 20px 20px;"
+              >
                 <span class="confirm-title uk-text-truncate">
                   <div *ngIf="fromAddressBook">
                     <span class="confirm-title">{{ fromAddressBook }}</span>
                     <span class="confirm-subtitle">From Account</span>
-                    <span class="uk-text-small uk-text-truncate">{{ fromAccountID | squeeze }}</span>
+                    <span class="uk-text-small uk-text-truncate">{{
+                      fromAccountID | squeeze
+                    }}</span>
                   </div>
                   <div *ngIf="!fromAddressBook">
-                    <span class="confirm-title uk-text-truncate">{{ fromAccountID | squeeze }}</span>
+                    <span class="confirm-title uk-text-truncate">{{
+                      fromAccountID | squeeze
+                    }}</span>
                     <span class="confirm-subtitle">From Account</span>
                     <br class="br-spacer" />
                   </div>
@@ -128,11 +275,15 @@
               <div class="uk-card-body" style="padding: 20px 20px;">
                 <div uk-grid>
                   <div class="uk-width-1-2 uk-text-muted">
-                    <span class="confirm-currency">{{ fromAccount.balance || 0 | rai: 'mnano'}}</span>
+                    <span class="confirm-currency">{{
+                      fromAccount.balance || 0 | rai: "mnano"
+                    }}</span>
                     <span class="confirm-subtitle">Current Balance</span>
                   </div>
                   <div class="uk-width-1-2 uk-text-right">
-                    <span class="confirm-currency uk-text-danger">-{{ rawAmount | rai: 'mnano' }}</span>
+                    <span class="confirm-currency uk-text-danger"
+                      >-{{ rawAmount | rai: "mnano" }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -141,16 +292,22 @@
 
           <div class="uk-width-1-2@m">
             <div class="uk-card uk-card-default">
-              <div class="uk-card-header uk-text-right" style="padding: 20px 20px;">
-
+              <div
+                class="uk-card-header uk-text-right"
+                style="padding: 20px 20px;"
+              >
                 <span class="confirm-title uk-text-truncate">
                   <div *ngIf="toAddressBook">
                     <span class="confirm-title">{{ toAddressBook }}</span>
                     <span class="confirm-subtitle">To Account</span>
-                    <span class="uk-text-small uk-text-truncate">{{ toAccountID | squeeze }}</span>
+                    <span class="uk-text-small uk-text-truncate">{{
+                      toAccountID | squeeze
+                    }}</span>
                   </div>
                   <div *ngIf="!toAddressBook">
-                    <span class="confirm-title uk-text-truncate">{{ toAccountID | squeeze }}</span>
+                    <span class="confirm-title uk-text-truncate">{{
+                      toAccountID | squeeze
+                    }}</span>
                     <span class="confirm-subtitle">To Account</span>
                     <br class="br-spacer" />
                   </div>
@@ -159,11 +316,15 @@
               <div class="uk-card-body" style="padding: 20px 20px;">
                 <div uk-grid>
                   <div class="uk-width-1-2 uk-text-muted">
-                    <span class="confirm-currency">{{ toAccount.balance || 0 | rai: 'mnano'}}</span>
+                    <span class="confirm-currency">{{
+                      toAccount.balance || 0 | rai: "mnano"
+                    }}</span>
                     <span class="confirm-subtitle">Current Balance</span>
                   </div>
                   <div class="uk-width-1-2 uk-text-right">
-                    <span class="confirm-currency uk-text-success">+{{ rawAmount | rai: 'mnano' }}</span>
+                    <span class="confirm-currency uk-text-success"
+                      >+{{ rawAmount | rai: "mnano" }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -173,30 +334,58 @@
 
         <div uk-grid>
           <div class="uk-width-1-2@s">
-            <button (click)="activePanel = 'send'" class="uk-button uk-button-danger uk-width-1-1">Cancel</button>
+            <button
+              (click)="activePanel = 'send'"
+              class="uk-button uk-button-danger uk-width-1-1"
+            >
+              Cancel
+            </button>
           </div>
           <div class="uk-width-1-2@s">
-            <button *ngIf="!confirmingTransaction" class="uk-button uk-button-primary uk-width-1-1" (click)="confirmTransaction()">Confirm & Send</button>
-            <button *ngIf="confirmingTransaction" class="uk-button uk-button-primary uk-disabled uk-width-1-1"><span class="uk-margin-right" uk-spinner></span> Loading</button>
+            <button
+              *ngIf="!confirmingTransaction"
+              class="uk-button uk-button-primary uk-width-1-1"
+              (click)="confirmTransaction()"
+            >
+              Confirm & Send
+            </button>
+            <button
+              *ngIf="confirmingTransaction"
+              class="uk-button uk-button-primary uk-disabled uk-width-1-1"
+            >
+              <span class="uk-margin-right" uk-spinner></span> Loading
+            </button>
           </div>
         </div>
       </div>
     </div>
     <!-- End Confirmation Panel -->
 
-
-    <div uk-grid *ngIf="activePanel == 'status'" class="uk-animation-slide-left">
+    <div
+      uk-grid
+      *ngIf="activePanel == 'status'"
+      class="uk-animation-slide-left"
+    >
       <div class="uk-width-1-1">
         <div class="uk-card uk-card-default uk-width-1-1 uk-text-center">
           <span style="display: block; padding-top: 8px;">You are sending</span>
-          <span style="display:block; font-size: 32px;">{{ rawAmount | rai: 'mnano' }}</span>
-          <span style="display:block; font-size: 12px;" *ngIf="amountRaw.gt(0)">+{{ amountRaw.toString(10) }} raw</span>
-          <span style="display:block; font-size: 16px; padding-bottom: 5px;" *ngIf="settings.settings.displayCurrency">{{ amountFiat | fiat: settings.settings.displayCurrency }} @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / NANO</span>
+          <span style="display: block; font-size: 32px;">{{
+            rawAmount | rai: "mnano"
+          }}</span>
+          <span style="display: block; font-size: 12px;" *ngIf="amountRaw.gt(0)"
+            >+{{ amountRaw.toString(10) }} raw</span
+          >
+          <span
+            style="display: block; font-size: 16px; padding-bottom: 5px;"
+            *ngIf="settings.settings.displayCurrency"
+            >{{ amountFiat | fiat: settings.settings.displayCurrency }} @
+            {{
+              price.price.lastPrice | fiat: settings.settings.displayCurrency
+            }}
+            / NANO</span
+          >
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
-
