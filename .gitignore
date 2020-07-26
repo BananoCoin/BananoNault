@@ -22,6 +22,8 @@
 
 # IDE - VSCode
 .vs/*
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -45,5 +47,4 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
-.vs/ProjectSettings.json
-.vs/slnx.sqlite
+
