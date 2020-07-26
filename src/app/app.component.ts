@@ -5,7 +5,6 @@ import {AppSettingsService} from "./services/app-settings.service";
 import {WebsocketService} from "./services/websocket.service";
 import {PriceService} from "./services/price.service";
 import {NotificationService} from "./services/notification.service";
-import {PowService} from "./services/pow.service";
 import {WorkPoolService} from "./services/work-pool.service";
 import {Router} from "@angular/router";
 import {RepresentativeService} from "./services/representative.service";
@@ -39,7 +38,6 @@ export class AppComponent implements OnInit {
     public settings: AppSettingsService,
     private websocket: WebsocketService,
     private notifications: NotificationService,
-    private pow: PowService,
     public nodeService: NodeService,
     private representative: RepresentativeService,
     private router: Router,
@@ -64,9 +62,12 @@ export class AppComponent implements OnInit {
 
     this.representative.loadRepresentativeList();
 
-    // If the wallet is locked and there is a pending balance, show a warning to unlock the wallet
-    if (this.wallet.locked && this.walletService.hasPendingTransactions()) {
-      this.notifications.sendWarning(`New incoming transaction - unlock the wallet to receive it!`, { length: 0, identifier: 'pending-locked' });
+    // If the wallet is locked and there is a pending balance, show a warning to unlock the wallet (if not receive priority is set to manual)
+    if (this.wallet.locked && this.walletService.hasPendingTransactions() && this.settings.settings.pendingOption !== 'manual') {
+      this.notifications.sendWarning(`New incoming transaction(s) - Unlock the wallet to receive`, { length: 10000, identifier: 'pending-locked' });
+    }
+    else if (this.walletService.hasPendingTransactions() && this.settings.settings.pendingOption === 'manual') {
+      this.notifications.sendWarning(`Incoming transaction(s) found - Set to be received manually`, { length: 10000, identifier: 'pending-locked' });
     }
 
     // If they are using a Ledger device with a bad browser, warn them
@@ -108,6 +109,7 @@ export class AppComponent implements OnInit {
     }, 1000);
 
     try {
+      if (!this.settings.settings.serverAPI) return;
       await this.updateFiatPrices();
     } catch (err) {
       this.notifications.sendWarning(`There was an issue retrieving latest Nano price.  Ensure your AdBlocker is disabled on this page then reload to see accurate FIAT values.`, { length: 0, identifier: `price-adblock` });
@@ -132,6 +134,10 @@ export class AppComponent implements OnInit {
 
   toggleNav() {
     this.navExpanded = !this.navExpanded
+  }
+
+  closeNav() {
+    this.navExpanded = false;
   }
 
   toggleSearch(mobile = false) {
@@ -160,6 +166,10 @@ export class AppComponent implements OnInit {
   }
 
   retryConnection() {
+    if (!this.settings.settings.serverAPI) {
+      this.notifications.sendInfo(`Wallet server settings is set to offline mode. Please change server first!`);
+      return;
+    }
     this.walletService.reloadBalances(true);
     this.notifications.sendInfo(`Attempting to reconnect to Nano node`);
   }

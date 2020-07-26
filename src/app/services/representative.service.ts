@@ -4,6 +4,7 @@ import {BaseApiAccount, WalletApiAccount, WalletService} from "./wallet.service"
 import BigNumber from "bignumber.js";
 import {ApiService} from "./api.service";
 import {UtilService} from "./util.service";
+import { NinjaService } from './ninja.service';
 
 export interface RepresentativeStatus {
   online: boolean;
@@ -58,6 +59,7 @@ export class RepresentativeService {
     private wallet: WalletService,
     private api: ApiService,
     private util: UtilService,
+    private ninja: NinjaService
   ) {
     this.representatives = this.defaultRepresentatives;
   }
@@ -106,6 +108,7 @@ export class RepresentativeService {
     for (const representative of representatives) {
       const repOnline = onlineReps.indexOf(representative.account) !== -1;
       const knownRep = this.getRepresentative(representative.account);
+      const knownRepNinja = await this.ninja.getAccount(representative.account);
 
       const nanoWeight = this.util.nano.rawToMnano(representative.weight || 0);
       const percent = nanoWeight.div(totalSupply).times(100);
@@ -120,6 +123,7 @@ export class RepresentativeService {
 
       // Determine the status based on some factors
       let status = 'none';
+      let label;
 
       if (percent.gte(10)) {
         status = 'alert'; // Has extremely high voting weight
@@ -131,6 +135,7 @@ export class RepresentativeService {
 
       if (knownRep) {
         status = status = 'none' ? 'known' : status; // In our list
+        label = knownRep.name;
         repStatus.known = true;
         if (knownRep.trusted) {
           status = 'trusted'; // In our list and marked as trusted
@@ -140,13 +145,23 @@ export class RepresentativeService {
           status = 'alert'; // In our list and marked for avoidance
           repStatus.warn = true;
         }
+      } else if (knownRepNinja) {
+        status = status = 'none' ? 'known' : status; // In our list
+        label = knownRepNinja.alias;
+        if (knownRepNinja.score < 70) {
+          status = 'alert';
+          repStatus.warn = true;
+        } else if (knownRepNinja.score < 80) {
+          status = 'warn';
+          repStatus.warn = true;
+        }
       }
 
       const additionalData = {
         id: representative.account,
         percent: percent,
         statusText: status,
-        label: knownRep ? knownRep.name : null,
+        label: label,
         status: repStatus,
       };
 
@@ -192,6 +207,7 @@ export class RepresentativeService {
   async getOnlineRepresentatives(): Promise<string[]> {
     const representatives = [];
     const reps = await this.api.representativesOnline();
+    if (!reps) return representatives;
     for (let representative in reps.representatives) {
       if (!reps.representatives.hasOwnProperty(representative)) continue;
       representatives.push(reps.representatives[representative]);
@@ -321,66 +337,47 @@ export class RepresentativeService {
   }
 
   // Default representatives list
+  // tslint:disable-next-line:member-ordering
   defaultRepresentatives = [
     {
-      id: 'ban_1fomoz167m7o38gw4rzt7hz67oq6itejpt4yocrfywujbpatd711cjew8gjj',
-      name: 'Official Fomo Rep',
+      id: 'nano_3arg3asgtigae3xckabaaewkx3bzsh7nwz7jkmjos79ihyaxwphhm6qgjps4',
+      name: 'Nano Foundation #1',
       warn: true,
-	  trusted: true,
     },
     {
-      id: 'ban_1cake36ua5aqcq1c5i3dg7k8xtosw7r9r7qbbf5j15sk75csp9okesz87nfn',
-      name: 'Official FudCake Rep',	  
+      id: 'nano_1stofnrxuz3cai7ze75o174bpm7scwj9jn3nxsn8ntzg784jf1gzn1jjdkou',
+      name: 'Nano Foundation #2',
       warn: true,
-	  trusted: true,
     },
     {
-      id: 'ban_1bananobh5rat99qfgt1ptpieie5swmoth87thi74qgbfrij7dcgjiij94xr',
-      name: 'Official BananoRatPie Rep',
+      id: 'nano_1q3hqecaw15cjt7thbtxu3pbzr1eihtzzpzxguoc37bj1wc5ffoh7w74gi6p',
+      name: 'Nano Foundation #3',
       warn: true,
-	  trusted: true,
     },
     {
-      id: 'ban_1banbet955hwemgsqrb8afycd3nykaqaxsn7iaydcctfrwi3rbb36y17fbcb',
-      name: 'BananoBet Rep',
+      id: 'nano_3dmtrrws3pocycmbqwawk6xs7446qxa36fcncush4s1pejk16ksbmakis78m',
+      name: 'Nano Foundation #4',
       warn: true,
-	  trusted: true,
     },
     {
-      id: 'ban_1ka1ium4pfue3uxtntqsrib8mumxgazsjf58gidh1xeo5te3whsq8z476goo',
-      name: 'Kalium Rep',
+      id: 'nano_3hd4ezdgsp15iemx7h81in7xz5tpxi43b6b41zn3qmwiuypankocw3awes5k',
+      name: 'Nano Foundation #5',
       warn: true,
-	  trusted: true,
     },
-{
-      id: 'ban_1creepi89mp48wkyg5fktgap9j6165d8yz6g1fbe5pneinz3by9o54fuq63m',
-      name: ' creeper.banano.cc',
-      warn: false,
-	  trusted: true,
+    {
+      id: 'nano_1awsn43we17c1oshdru4azeqjz9wii41dy8npubm4rg11so7dx3jtqgoeahy',
+      name: 'Nano Foundation #6',
+      warn: true,
     },
-{
-      id: 'ban_1tipbotgges3ss8pso6xf76gsyqnb69uwcxcyhouym67z7ofefy1jz7kepoy',
-      name: 'Banano-Tipbots',
-      warn: false,
-	  trusted: true,
+    {
+      id: 'nano_1anrzcuwe64rwxzcco8dkhpyxpi8kd7zsjc1oeimpc3ppca4mrjtwnqposrs',
+      name: 'Nano Foundation #7',
+      warn: true,
     },
-{
-      id: 'ban_1sebrep1mbkdtdb39nsouw5wkkk6o497wyrxtdp71sm878fxzo1kwbf9k79b',
-      name: '1sebrep1 (DE)',
-      warn: false,
-	  trusted: true,
-    },
-{
-      id: 'ban_1bestrep6gq14bt4bi7w446m9knc6matfad7qcii7edeb33iipooh46dotdz',
-      name: '1bestrep (CH)',
-      warn: false,
-	  trusted: true,
-    },
-{
-      id: 'ban_14z56meuqz6etgaik1ucsuyzcmp4aju73ziqkct3jdn3eqsgigihhkjitibz',
-      name: 'protecc iazid (FR)',
-      warn: false,
-	  trusted: true,
+    {
+      id: 'nano_1hza3f7wiiqa7ig3jczyxj5yo86yegcmqk3criaz838j91sxcckpfhbhhra1',
+      name: 'Nano Foundation #8',
+      warn: true,
     },
   ];
 

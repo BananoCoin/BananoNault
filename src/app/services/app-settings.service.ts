@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import * as url from "url";
+import { Injectable } from '@angular/core';
+import * as url from 'url';
 
-export type WalletStore = "localStorage" | "none";
-export type PoWSource = "server" | "clientCPU" | "clientWebGL" | "best";
+export type WalletStore = 'localStorage'|'none';
+export type PoWSource = 'server'|'clientCPU'|'clientWebGL'|'best';
 
 interface AppSettings {
   displayDenomination: string;
@@ -27,67 +27,83 @@ export class AppSettingsService {
   storeKey = `nanovault-appsettings`;
 
   settings: AppSettings = {
-    displayDenomination: "mnano",
+    displayDenomination: 'mnano',
     // displayPrefix: 'xrb',
-    walletStore: "localStorage",
-    displayCurrency: "USD",
+    walletStore: 'localStorage',
+    displayCurrency: 'USD',
     defaultRepresentative: null,
     lockOnClose: 1,
     lockInactivityMinutes: 30,
-    powSource: "best",
-    pendingOption: "amount",
-    serverName: "random",
+    powSource: 'best',
+    pendingOption: 'amount',
+    serverName: 'random',
     serverAPI: null,
     serverWS: null,
     serverAuth: null,
     minimumReceive: null,
-    walletVersion: 1,
+    walletVersion: 1
   };
 
   serverOptions = [
     {
-      name: "Random",
-      value: "random",
+      name: 'Random',
+      value: 'random',
       api: null,
       ws: null,
       auth: null,
       shouldRandom: false,
     },
     {
-      name: "Kaliumapi.appditto",
-      value: "nanos",
-      api: "https://kaliumapi.appditto.com/api",
-      ws: "wss://socket.nanos.cc",
+      name: 'My Nano Ninja',
+      value: 'ninja',
+      api: 'https://mynano.ninja/api/node',
+      ws: 'wss://ws.mynano.ninja',
       auth: null,
       shouldRandom: true,
     },
     {
-      name: "Creeper.banano",
-      value: "ninja",
-      api: "https://api.creeper.banano.cc/",
-      ws: "wss://ws.mynano.ninja",
+      name: 'Nanos.cc',
+      value: 'nanos',
+      api: 'https://proxy.nanos.cc/proxy',
+      ws: 'wss://socket.nanos.cc',
       auth: null,
       shouldRandom: true,
     },
     {
-      name: "beta.Banano",
-      value: "nanex",
-      api: "http://api-beta.banano.cc/",
+      name: 'Nanex.cc',
+      value: 'nanex',
+      api: 'https://api.nanex.cc',
       ws: null,
       auth: null,
       shouldRandom: false,
     },
     {
-      name: "Custom",
-      value: "custom",
+      name: 'NanoCrawler',
+      value: 'nanocrawler',
+      api: 'https://vault.nanocrawler.cc/api/node-api',
+      ws: null,
+      auth: null,
+      shouldRandom: false,
+    },
+    {
+      name: 'Custom',
+      value: 'custom',
       api: null,
       ws: null,
       auth: null,
       shouldRandom: false,
     },
+    {
+      name: 'Offline Mode',
+      value: 'offline',
+      api: null,
+      ws: null,
+      auth: null,
+      shouldRandom: false,
+    }
   ];
 
-  constructor() {}
+  constructor() { }
 
   loadAppSettings() {
     let settings: AppSettings = this.settings;
@@ -103,24 +119,24 @@ export class AppSettingsService {
   }
 
   loadServerSettings() {
-    const matchingServerOption = this.serverOptions.find(
-      (d) => d.value === this.settings.serverName
-    );
+    const matchingServerOption = this.serverOptions.find(d => d.value === this.settings.serverName);
 
-    if (this.settings.serverName === "random" || !matchingServerOption) {
-      const availableServers = this.serverOptions.filter(
-        (server) => server.shouldRandom
-      );
-      const randomServerOption =
-        availableServers[Math.floor(Math.random() * availableServers.length)];
-      console.log("SETTINGS: Random", randomServerOption);
+    if (this.settings.serverName === 'random' || !matchingServerOption) {
+      const availableServers = this.serverOptions.filter(server => server.shouldRandom);
+      const randomServerOption = availableServers[Math.floor(Math.random() * availableServers.length)];
+      console.log('SETTINGS: Random', randomServerOption);
 
       this.settings.serverAPI = randomServerOption.api;
       this.settings.serverWS = randomServerOption.ws;
-    } else if (this.settings.serverName === "custom") {
-      console.log("SETTINGS: Custom");
+    } else if (this.settings.serverName === 'custom') {
+      console.log('SETTINGS: Custom');
+    } else if (this.settings.serverName === 'offline') {
+      console.log('SETTINGS: Offline Mode');
+      this.settings.serverName = matchingServerOption.value;
+      this.settings.serverAPI = matchingServerOption.api;
+      this.settings.serverWS = matchingServerOption.ws;
     } else {
-      console.log("SETTINGS: Found", matchingServerOption);
+      console.log('SETTINGS: Found', matchingServerOption);
       this.settings.serverName = matchingServerOption.value;
       this.settings.serverAPI = matchingServerOption.api;
       this.settings.serverWS = matchingServerOption.ws;
@@ -152,16 +168,16 @@ export class AppSettingsService {
   clearAppSettings() {
     localStorage.removeItem(this.storeKey);
     this.settings = {
-      displayDenomination: "mnano",
+      displayDenomination: 'mnano',
       // displayPrefix: 'xrb',
-      walletStore: "localStorage",
-      displayCurrency: "USD",
+      walletStore: 'localStorage',
+      displayCurrency: 'USD',
       defaultRepresentative: null,
       lockOnClose: 1,
       lockInactivityMinutes: 30,
-      powSource: "best",
-      pendingOption: "amount",
-      serverName: "random",
+      powSource: 'best',
+      pendingOption: 'amount',
+      serverName: 'random',
       serverAPI: null,
       serverWS: null,
       serverAuth: null,
@@ -173,7 +189,7 @@ export class AppSettingsService {
   // Get the base URL part of the serverAPI, e.g. https://nanovault.io from https://nanovault.io/api/node-api.
   getServerApiBaseUrl(): string {
     let u = url.parse(this.settings.serverAPI);
-    u.pathname = "/";
+    u.pathname = '/';
     return url.format(u);
   }
 }

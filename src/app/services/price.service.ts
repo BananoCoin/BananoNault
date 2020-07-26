@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
+import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable()
 export class PriceService {
-  apiUrl = `https://api.coingecko.com/api/v3/coins/banano?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`;
+  apiUrl = `https://api.coingecko.com/api/v3/coins/nano?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`;
 
   price = {
     lastPrice: 1,
@@ -12,9 +12,9 @@ export class PriceService {
   };
   lastPrice$ = new BehaviorSubject(1);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  async getPrice(currency = "USD") {
+  async getPrice(currency = 'USD') {
     if (!currency) return; // No currency defined, do not refetch
     const response: any = await this.http.get(`${this.apiUrl}`).toPromise();
     if (!response) {
@@ -32,4 +32,5 @@ export class PriceService {
 
     return this.price.lastPrice;
   }
+
 }

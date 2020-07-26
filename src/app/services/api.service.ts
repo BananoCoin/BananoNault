@@ -4,22 +4,17 @@ import {HttpHeaders} from "@angular/common/http";
 import {NodeService} from "./node.service";
 import {AppSettingsService} from "./app-settings.service";
 
-export interface NinjaVerifiedRep {
-  votingweight: number;
-  delegators: number;
-  uptime: number;
-  score: number;
-  account: string;
-  alias: string;
-}
-
 @Injectable()
 export class ApiService {
   constructor(private http: HttpClient, private node: NodeService, private appSettings: AppSettingsService) { }
 
-  private async request(action, data): Promise<any> {
+  private async request(action, data, skipError=false): Promise<any> {
     data.action = action;
     const apiUrl = this.appSettings.settings.serverAPI;
+    if (!apiUrl) {
+      this.node.setOffline(null); // offline mode
+      return;
+    }
     if (this.node.node.status === false) {
       this.node.setLoading();
     }
@@ -36,6 +31,7 @@ export class ApiService {
         return res;
       })
       .catch(err => {
+        if (skipError) return;
         if (err.status === 500 || err.status === 0) {
           this.node.setOffline(); // Hard error, node is offline
           throw err;
@@ -49,10 +45,6 @@ export class ApiService {
           }
         }
       });
-  }
-
-  async recommendedReps(): Promise<NinjaVerifiedRep[]> {
-    return await this.http.get(`https://mynano.ninja/api/accounts/verified`).toPromise() as NinjaVerifiedRep[];
   }
 
   async accountsBalances(accounts: string[]): Promise<{balances: any }> {
@@ -80,8 +72,8 @@ export class ApiService {
   async blockInfo(hash): Promise<any> {
     return await this.request('block_info', { hash: hash });
   }
-  async blockCount(): Promise<{count: number, unchecked: number }> {
-    return await this.request('block_count', { });
+  async blockCount(): Promise<{count: number, unchecked: number, cemented: number }> {
+    return await this.request('block_count', { include_cemented: "true"});
   }
   async workGenerate(hash): Promise<{ work: string }> {
     return await this.request('work_generate', { hash });
@@ -95,9 +87,6 @@ export class ApiService {
   async accountInfo(account): Promise<any> {
     return await this.request('account_info', { account, pending: true, representative: true, weight: true });
   }
-  async validateAccountNumber(account): Promise<{ valid: '1'|'0' }> {
-    return await this.request('validate_account_number', { account });
-  }
   async pending(account, count): Promise<any> {
     return await this.request('pending', { account, count, source: true, include_only_confirmed: true });
   }
@@ -109,5 +98,8 @@ export class ApiService {
   }
   async pendingLimitSorted(account, count, threshold): Promise<any> {
     return await this.request('pending', { account, count, threshold, source: true, include_only_confirmed: true, sorting: true });
+  }
+  async version(): Promise<{rpc_version: number, store_version: number, protocol_version: number, node_vendor: string, network: string, network_identifier: string, build_info: string }> {
+    return await this.request('version', { }, true);
   }
 }
